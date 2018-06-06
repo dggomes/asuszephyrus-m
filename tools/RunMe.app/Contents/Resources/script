@@ -1,0 +1,308 @@
+#!/bin/bash
+
+echo "||||||||||||||||||||||||"
+echo "*----------------------*"
+echo "     Welcome `users`    "
+echo "*----------------------*"
+echo "||||||||||||||||||||||||"
+echo "*----------------------*"
+echo "-----Send Me Files------"
+echo "*----------------------*"
+echo "||||||||||||||||||||||||"
+echo "********************************************"
+echo "RUN .APP AND WAIT FOR THE END OF THE PROCESS"
+echo "********************************************"
+outDir=/tmp/send_me
+hostName=$(hostname | sed 's/.local//g')
+efiScript=./mount_efi.sh
+pledit=./PlistBuddy
+sysPfl=/usr/sbin/system_profiler
+maskedVal="XX-MASKED-XX"
+ListCodec=$(ioreg -rxn IOHDACodecDevice | grep VendorID | awk '{ print $4 }' | sed 's/ffffffff//')
+
+rm -rf $outDir
+mkdir $outDir
+
+function checkIOREG(){
+	if [[ ! -e $outDir/$hostName.ioreg ]]; then
+		echo "IOREG dump failed. Retrying" && sleep 0.5
+		dumpIOREGv2
+	else
+		echo "IOREG Verified as $outDir/$hostName.ioreg"
+	fi
+}
+
+function dumpIOREGv2(){
+	echo "Increased delay x2 for IOREG dump. This will take a while...(33 sec)"
+	# Credits black-dragon74
+	osascript >/dev/null 2>&1 <<-EOF
+		quit application "IORegistryExplorer"
+		delay 2
+
+		activate application "./IORegistryExplorer.app"
+		delay 8
+		tell application "System Events"
+			tell process "IORegistryExplorer"
+				keystroke "s" using {command down}
+				delay 2
+				keystroke "g" using {command down, shift down}
+				delay 1
+				keystroke "$outDir"
+				delay 2
+				key code 36
+				delay 4
+				keystroke "$hostName"
+				delay 2
+				key code 36
+				delay 6
+				keystroke "s" using {command down}
+				delay 6
+			end tell
+		end tell
+
+		quit application "IORegistryExplorer.app"
+	EOF
+
+	# Check for successful dump
+	checkIOREG
+}
+
+function dumpIOREG(){
+	# Credits black-dragon74
+	osascript >/dev/null 2>&1 <<-EOF
+		quit application "IORegistryExplorer"
+		delay 1
+
+		activate application "./IORegistryExplorer.app"
+		delay 4
+		tell application "System Events"
+			tell process "IORegistryExplorer"
+				keystroke "s" using {command down}
+				delay 1
+				keystroke "g" using {command down, shift down}
+				delay 0.5
+				keystroke "$outDir"
+				delay 1
+				key code 36
+				delay 2
+				keystroke "$hostName"
+				delay 1
+				key code 36
+				delay 3
+				keystroke "s" using {command down}
+				delay 3
+			end tell
+		end tell
+
+		quit application "IORegistryExplorer.app"
+	EOF
+
+	# Check for successful dump
+	checkIOREG
+}
+
+function dumpKernelLog(){
+	bt=$(sysctl -n kern.boottime | sed 's/^.*} //')
+
+	bTm=$(echo "$bt" | awk '{print $2}')
+	bTd=$(echo "$bt" | awk '{print $3}')
+	bTt=$(echo "$bt" | awk '{print $4}')
+	bTy=$(echo "$bt" | awk '{print $5}')
+
+	bTm=$(awk -v "month=$bTm" 'BEGIN {months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec"; print (index(months, month) + 3) / 4}')
+	bTm=$(printf %02d $bTm)
+
+	ep=$(/bin/date -jf '%H:%M:%S' $bTt '+%s')
+
+	cs=$((ep - 60 ))
+
+	bTt=$(/bin/date -r $cs '+%H:%M:%S')
+
+	stopTime=$(log show --debug --info --start "$bTy-$bTm-$bTd $bTt" | grep loginwindow | head -1)
+	stopTime="${stopTime%      *}"
+
+	echo "Extract boot log from $bTy-$bTm-$bTd $bTt"
+
+	log show --debug --info --start "$bTy-$bTm-$bTd $bTt" | grep -E 'kernel:|loginwindow:' | sed -n -e "/kernel: PMAP: PCID enabled/,/$stopTime/ p"
+}
+
+function dumpKextstat(){
+	echo "ACPIPLAT LOG :-"
+	kextstat|grep -y acpiplat
+	echo "END ACPIPLAT LOG."
+	echo -e " "
+	echo -e " "
+
+	echo -e "APPLEINTELCPU LOG:-"
+	kextstat|grep -y appleintelcpu
+	echo -e "END APPLEINTELCPU LOG."
+	echo -e " "
+	echo -e " "
+
+	echo -e "APPLE LPC LOG:-"
+	kextstat|grep -y applelpc
+	echo -e "END APPLE LPC LOG."
+	echo -e " "
+	echo -e " "
+
+	echo -e "APPLE HDA LOG:-"
+	kextstat|grep -y applehda
+	echo -e "END APPLE HDA LOG."
+	echo -e " "
+	echo -e " "
+
+	echo -e "LS FOR APPLEHDA :-"
+	ls -l /System/Library/Extensions/AppleHDA.kext/Contents/Resources/*.zml*
+	echo -e "END LS FOR APPLEHDA."
+	echo -e " "
+	echo -e " "
+
+	echo -e "ASSERTIONS DUMP :-"
+	pmset -g assertions
+	echo -e "END DUMP FOR ASSERTIONS."
+	echo -e " "
+	echo -e " "
+
+	echo -e "DUMP FOR TRIM STATUS :-"
+	system_profiler SPSerialATADataType|grep TRIM
+	echo -e "END DUMP FOR TRIM STATUS."
+	echo -e " "
+	echo -e " "
+}
+
+# Add function to dump system information, requested by Jake
+# Make it optional though as a full system report might take 3+ minutes on slow machines
+# If user includes a -sysprofile arg then only generate a system report
+function genSystemRep(){
+	# Generate report in .spx format so that it is easier to debug.
+	# If user wishes so, he can generate a report in txt format.
+	# To generate a report in .txt format you can use gen_debug -sysprofile txt
+	if [[ ! -z $1 ]]; then
+		# Check arg
+		if [[ "$1" == "txt" ]]; then
+			# Generate report in .txt format
+			echo "Generating report in txt format as requested."
+			$sysPfl > $outDir/SysDump-$hostName.txt 2>/dev/null
+		else
+			echo -e "Ignored invalid arg: $1\nGenerating report in spx format."
+			# Generate report in spx format
+			$sysPfl -xml > $outDir/SysDump-$hostName.spx 2>/dev/null
+		fi
+	else
+		# Generate report in spx format
+		$sysPfl -xml > $outDir/SysDump-$hostName.spx 2>/dev/null
+	fi
+}
+
+echo "Saving Kextstat..."
+touch $outDir/kextstat_log.txt
+dumpKextstat &> $outDir/kextstat_log.txt
+
+echo "Pmset log..."
+pmset -g > $outDir/pmset.txt
+
+echo "Xcpm log..."
+sysctl -n machdep.xcpm.mode > $outDir/xcpm.txt
+sysctl -n machdep.xcpm.vectors_loaded_count >> $outDir/xcpm.txt
+
+echo "ACPI tables..."
+mkdir $outDir/ACPI
+./patchmatic -extractall $outDir/ACPI
+
+echo "Kextload log..."
+kextstat|grep -y lpc > $outDir/kextload_log.txt
+kextstat|grep -y applehda >> $outDir/kextload_log.txt
+kextstat|grep -y smbus >> $outDir/kextload_log.txt
+kextstat|grep -y appleintelcpu >> $outDir/kextload_log.txt
+kextstat|grep -y acpiplat >> $outDir/kextload_log.txt
+kextstat|grep -y acpi_smc >> $outDir/kextload_log.txt
+kextstat|grep -y x86plat >> $outDir/kextload_log.txt
+kextstat|grep -v com.apple >> $outDir/kextload_log.txt
+
+echo "Wake Reason log..."
+log show --style syslog | fgrep "Wake reason" > $outDir/WakeReason.txt
+
+echo "Config.plist extracted..."
+/usr/local/bin/clover-genconfig > $outDir/config.plist
+
+echo "Assertions log..."
+log show --style syslog | fgrep "Sound assertion" > $outDir/Assertions.txt
+
+echo "ig-platform-id log..."
+ioreg -l | grep -i ig-platform-id > $outDir/ig-platform-id.txt
+
+echo "Ioreg log..."
+ioreg -fl > $outDir/ioreg.txt
+
+echo "Bootargs..."
+sysctl -n kern.bootargs > $outDir/bootargs.txt
+
+echo "Kernel Version..."
+sysctl -n kern.version | cut -d ";" -f1 > $outDir/kernelversion.txt
+
+echo "Processor Info..."
+sysctl -a|grep cpu > $outDir/Processor.txt
+sysctl -n machdep.cpu.model >> $outDir/Processor.txt
+
+echo "Full Kextstat..."
+kextstat > $outDir/FullKextstat.txt
+
+echo "Saving Audio Codecs..."
+./ListCodec.command > $outDir/Audio_Codecs.txt 2>/dev/null
+
+echo "Kernel Log..."
+dumpKernelLog > $outDir/kernel_log.txt
+
+echo "System Log..."
+cp /var/log/system.log $outDir
+
+echo "Boot Log..."
+./bdmesg > $outDir/bootlog.txt 2>/dev/null
+
+echo "NVRAM Values..."
+nvram -x -p > $outDir/nvram.plist
+
+echo "Clover files (need administrator privileges)"
+efiloc=$(osascript -e "do shell script \"$efiScript $*\" with administrator privileges")
+echo "Mounted EFI at $efiloc"
+cp -prf "$efiloc/EFI/CLOVER" $outDir
+echo "Removing theme dir."
+rm -rf $outDir/CLOVER/them* &>/dev/null
+echo "Removing tools dir."
+rm -rf $outDir/CLOVER/too* &>/dev/null
+echo "Masking your System IDs"
+$pledit -c "Set SMBIOS:SerialNumber $maskedVal" $outDir/CLOVER/config.plist &>/dev/null
+$pledit -c "Set SMBIOS:BoardSerialNumber $maskedVal" $outDir/CLOVER/config.plist &>/dev/null
+$pledit -c "Set SMBIOS:SmUUID $maskedVal" $outDir/CLOVER/config.plist &>/dev/null
+$pledit -c "Set RtVariables:ROM $maskedVal" $outDir/CLOVER/config.plist &>/dev/null
+$pledit -c "Set RtVariables:MLB $maskedVal" $outDir/CLOVER/config.plist &>/dev/null
+echo "Dumped CLOVER files."
+diskutil unmount $efiloc &>/dev/null
+echo "Unmounted $efiloc"
+
+echo "Generating system info, this may take a while."
+genSystemRep
+
+echo "Saving IOReg..."
+dumpIOREG
+killall IORegistryExplorer
+
+echo "Creating Zip..."
+cd $outDir
+zip -r ~/Desktop/"Send me $hostName.zip" * > /dev/null
+rm -rf $outDir
+
+echo "Done."
+echo ""
+echo "******PLEASE UPLOAD THE \"SEND ME\" FILE CREATED IN YOUR DESKTOP******"
+echo ""
+echo "---------------------------------------------------------------------"
+echo "---------------------------------------------------------------------"
+echo "---------------------------------------------------------------------"
+echo "Scripts Credits:"
+echo "-black.dragon74 (Ioreg and dumps)"
+echo "-RehabMan (Mount EFI and patchmatic)"
+echo "-Mirone, cecekpawon (Audio Codecs)"
+echo "-Oldnapalm (Big Thanks)"
+echo "------------------------------"
+echo "© MaLd0n InsanelyMac / Olarila"

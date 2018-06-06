@@ -1,0 +1,141 @@
+﻿
+/* Class = "PEWindow"; title = "Window"; ObjectID = "5"; */
+"5.title" = "Window";
+
+/* Class = "NSMenuItem"; title = "ASCII"; ObjectID = "64"; */
+"64.title" = "ASCII";
+
+/* Class = "NSMenu"; title = "OtherViews"; ObjectID = "65"; */
+"65.title" = "OtherViews";
+
+/* Class = "NSMenuItem"; title = "Binär"; ObjectID = "66"; */
+"66.title" = "Binär";
+
+/* Class = "NSMenuItem"; title = "XML"; ObjectID = "67"; */
+"67.title" = "XML";
+
+/* Class = "NSMenu"; title = "Menü"; ObjectID = "84"; */
+"84.title" = "Menü";
+
+/* Class = "NSMenuItem"; title = "Kopieren"; ObjectID = "85"; */
+"85.title" = "Kopieren";
+
+/* Class = "NSMenuItem"; title = "Ausschneiden"; ObjectID = "86"; */
+"86.title" = "Ausschneiden";
+
+/* Class = "NSMenuItem"; title = "Einsetzen"; ObjectID = "87"; */
+"87.title" = "Einsetzen";
+
+/* Class = "NSMenuItem"; title = "Löschen"; ObjectID = "88"; */
+"88.title" = "Löschen";
+
+/* Class = "NSMenuItem"; title = "Duplizieren"; ObjectID = "93"; */
+"93.title" = "Duplizieren";
+
+/* Class = "NSMenuItem"; title = "Als Kind-Element einfügen"; ObjectID = "95"; */
+"95.title" = "Als Kind-Element einfügen";
+
+/* Class = "NSMenuItem"; title = "Schlüssel sortieren"; ObjectID = "97"; */
+"97.title" = "Schlüssel sortieren";
+
+/* Class = "NSMenuItem"; title = "Neues Geschwister-Element"; ObjectID = "99"; */
+"99.title" = "Neues Geschwister-Element";
+
+/* Class = "NSMenuItem"; title = "Neues Kind-Element"; ObjectID = "101"; */
+"101.title" = "Neues Kind-Element";
+
+/* Class = "NSTableColumn"; headerCell.title = "Property-List"; ObjectID = "124"; */
+"124.headerCell.title" = "Property-List";
+
+/* Class = "NSTableColumn"; headerCell.title = "Typ"; ObjectID = "125"; */
+"125.headerCell.title" = "Typ";
+
+/* Class = "NSTableColumn"; headerCell.title = "Wert"; ObjectID = "126"; */
+"126.headerCell.title" = "Wert";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Text automatisch aktualisieren, sobald sich die Strukturansicht ändert"; ObjectID = "135"; */
+"135.ibShadowedToolTip" = "Text automatisch aktualisieren, sobald sich die Strukturansicht ändert";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Text aktualisieren und Änderungen an der Strukturansicht übernehmen"; ObjectID = "136"; */
+"136.ibShadowedToolTip" = "Text aktualisieren und Änderungen an der Strukturansicht übernehmen";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Strukturansicht aktualisieren und Änderungen am Text übernehmen"; ObjectID = "137"; */
+"137.ibShadowedToolTip" = "Strukturansicht aktualisieren und Änderungen am Text übernehmen";
+
+/* Class = "NSMenuItem"; title = "Werte sortieren"; ObjectID = "173"; */
+"173.title" = "Werte sortieren";
+
+/* Class = "NSWindow"; title = "Gehe zu"; ObjectID = "177"; */
+"177.title" = "Gehe zu";
+
+/* Class = "NSMenuItem"; title = "Wert bearbeiten…"; ObjectID = "209"; */
+"209.title" = "Wert bearbeiten…";
+
+/* Class = "NSMenuItem"; title = "Anzeigen als"; ObjectID = "211"; */
+"211.title" = "Anzeigen als";
+
+/* Class = "NSMenu"; title = "Anzeigen als"; ObjectID = "212"; */
+"212.title" = "Anzeigen als";
+
+/* Class = "NSMenuItem"; title = "Item"; ObjectID = "213"; */
+"213.title" = "Item";
+
+/* Class = "NSMenuItem"; title = "Schlüssel für Geschwister-Element hinzufügen"; ObjectID = "267"; */
+"267.title" = "Schlüssel für Geschwister-Element hinzufügen";
+
+/* Class = "NSMenu"; title = "Schlüssel für Geschwister-Element hinzufügen"; ObjectID = "268"; */
+"268.title" = "Schlüssel für Geschwister-Element hinzufügen";
+
+/* Class = "NSMenuItem"; title = "Item"; ObjectID = "269"; */
+"269.title" = "Item";
+
+/* Class = "NSMenuItem"; title = "Kind-Element hinzufügen"; ObjectID = "271"; */
+"271.title" = "Kind-Element hinzufügen";
+
+/* Class = "NSButtonCell"; title = "Text automatisch synchronisieren"; ObjectID = "277"; */
+"277.title" = "Text automatisch synchronisieren";
+
+/* Class = "NSButtonCell"; title = "Text synchronisieren ↓"; ObjectID = "278"; */
+"278.title" = "Text synchronisieren ↓";
+
+/* Class = "NSButtonCell"; title = "Strukturansicht synchronisieren ↑"; ObjectID = "279"; */
+"279.title" = "Strukturansicht synchronisieren ↑";
+
+/* Class = "NSTextFieldCell"; title = "Gehe zu Zeile:"; ObjectID = "281"; */
+"281.title" = "Gehe zu Zeile:";
+
+/* Class = "NSButtonCell"; title = "OK"; ObjectID = "283"; */
+"283.title" = "OK";
+
+/* Class = "NSButtonCell"; title = "Abbrechen"; ObjectID = "284"; */
+"284.title" = "Abbrechen";
+
+/* Class = "NSMenu"; title = "Kind-Element hinzufügen"; ObjectID = "303"; */
+"303.title" = "Kind-Element hinzufügen";
+
+/* Class = "NSMenuItem"; title = "Item"; ObjectID = "304"; */
+"304.title" = "Item";
+
+/* Class = "NSMenuItem"; title = "Nach Unterschlüssel sortieren"; ObjectID = "305"; */
+"305.title" = "Nach Unterschlüssel sortieren";
+
+/* Class = "NSMenu"; title = "Nach Unterschlüssel sortieren"; ObjectID = "306"; */
+"306.title" = "Nach Unterschlüssel sortieren";
+
+/* Class = "NSMenuItem"; title = "Item"; ObjectID = "307"; */
+"307.title" = "Item";
+
+/* Class = "NSMenuItem"; title = "Nach Unterschlüssel anzeigen"; ObjectID = "321"; */
+"321.title" = "Nach Unterschlüssel anzeigen";
+
+/* Class = "NSMenu"; title = "Nach Unterschlüssel anzeigen"; ObjectID = "322"; */
+"322.title" = "Nach Unterschlüssel anzeigen";
+
+/* Class = "NSMenuItem"; title = "Item"; ObjectID = "323"; */
+"323.title" = "Item";
+
+/* Class = "NSMenuItem"; title = "Auf Standardwert setzen"; ObjectID = "326"; */
+"326.title" = "Auf Standardwert setzen";
+
+/* Class = "NSMenuItem"; title = "JSON"; ObjectID = "328"; */
+"328.title" = "JSON";
