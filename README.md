@@ -1,7 +1,7 @@
 # Hackintosh - this is still WIP and the uploaded files aren't working for all the drivers
 Personal project to install Mac OS High Sierra in the ASUS Zephyrus-M GM501GS consolidating guides from different forums.
 
-- OS: Mac OS High Sierra 10.13.4
+- OS: Mac OS High Sierra 10.13.6
 - CPU i7 8750H Code Lake
 - Chipset: HM370
 - Graphics: NVIDIA GTX 1070 8GB GDDR5
