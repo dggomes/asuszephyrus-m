@@ -124,13 +124,18 @@ STEP 6 - Install Clover to boot without the USB
 Now that you have the Mac OS installed and working as expected, we need to install Clover in our main EFI partition for that so you can stop using the USB to boot. First install Clover Configurator, open it and select Mount EFI. You should mount the EFI partition from the Windows disk, it should be called SYSTEM.
 Open the partition and replace the folder EFI entirely with the new EFI folder from the repository.
 
-STEP 7 - Add Boot options in the BIOS to boot Windows
+STEP 7 - Fix AppleHDA
+Download the patched HDA from the repository and place it on System/Library/Extensions deleting the previous version
+Download the RepairPermissions folder, put on your desktop and then run Repair.command
+Restart the computer, once restarted you should have the sound device enabled
+
+STEP 8 - Add Boot options in the BIOS to boot Windows
 Boot the computer, access the BIOS and go to Boot Settings.
 Add a new Boot Option called Windows 10 and select the file /EFI/Microsoft/Boot/bootmgfw-org.efi to load
 If you want Windows to be your default OS leave this as the 1st boot option, otherwise leave "Windows Boot Manager" or "clover.efi boot menu" as the primary
 
-STEP 8 - Brightness Slider
+STEP 9 - Brightness Slider
 There's no native support for changing the Brightness options so go to the AppStore and download the app Brightness Slider
 
-STEP 9 - Re-map CMD keys - optional
+STEP 10 - Re-map CMD keys - optional
 I personally recommend installing the software Karabiner to map the keys on your keyboard to be closer to what you use on Windows so I've mapped ALT to be the Command Key from Mac, for that I've added the config left_alt to left_gui and left_gui to left_alt.
