@@ -1,4 +1,4 @@
-# Hackintosh - this is still WIP and the uploaded files aren't working for all the drivers
+# ASUS Zephyrus-M Hackintosh
 Personal project to install Mac OS High Sierra in the ASUS Zephyrus-M GM501GS consolidating guides from different forums.
 
 - OS: Mac OS High Sierra 10.13.6
