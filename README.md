@@ -27,6 +27,15 @@ Intel Wi-Fi isn't compatible with MacOS so to have wi-fi you need to buy a compa
 
 STEP 0 - Create your USB Installer
 
+There are two ways to do that:
+a) Download a custom image, I recommend using the image fro Olarila that can be downloaded here: https://olarila.com/forum/viewtopic.php?f=51&t=6393
+
+The image you will need is the one for Intel 8th Generation
+
+You can write it to a USB using the Etcher app: https://www.balena.io/etcher/
+
+b) Create your own image:
+
 1) Using a MacOS, download High Sierra in the AppStore
 2) Download Unibeast and follow the steps to prepare the Installation USB
 3) If Unibeast gives an error saying that the Installer couldn't be created it's because you didn't download the full installer, open the High Sierra application and wait for it to finish downloading. When asked to restart, just close the installer.
@@ -57,11 +66,21 @@ Disable Secure Boot
 Disable VT-D
 
 STEP 2 - Create MacOS Partition:
-Using the Disk Management tool from Windows shrink Partition on Disk 2 (1TB) to create a new partition for MacOS
+
+It's highly recommended to install MacOS on the M2 partition since it's much faster. For that you need to open the Disk Management tool from Windows shrink Partition on Disk 1 (256GB) to create a new partition for MacOS
 Format this Partition as FAT32
 
-STEP 3 - Tweak EFI and install bootloader on Disk 1 - THhs is required if you want to install MacOS in the 1TB HDD instead of the 256GB SSD.
-Using the Disk Management tool from Windows shrink Disk 1 to leave 400mb not allocated to any partition
+STEP 4 - Install Mac OS
+Boot with the USB disk and press/hold ESC when the Republic of Gamers is displayed. Select your USB and then select Boot macOS Install from Install macOS High Sierra
+Open Disk Utility and format the MacOS Partition as Mac OS Journaled
+Start the installation of Mac OS in this partition
+The computer will restart a couple of times during the installation, every time it restarts you will need to go to the Boot menu, choose the USB and then select Boot macOS Install from your new MacOS partition (not from the USB Install Tool)
+
+Troubleshoot in case the Mac OS installation don't let you install it on the new partition:
+You will need to increase the EFI partition size in order to proceed with the installation
+
+Using the Disk Management tool from Windows delete the newly created Mac Partition
+
 Using Diskpart create a new EFI partition
 Open CMD using Admin rights and type the following code:
 -> Diskpart
@@ -76,22 +95,21 @@ Open CMD using Admin rights and type the following code:
 Close Diskpart and then type on CMD
 -> bcdboot c:\windows /s v: /f ALL
 
+Now open MacDrive again and re-create the MacOS partition with the remaining space in the hard-disk
+
 -> For more info on creating an EFI partition, please check crazyboy24's guide: https://www.tonymacx86.com/threads/guide-solving-media-kit-reports-not-enough-space-on-device-for-requested-operation-error.168286/
 
-STEP 4 - Install Mac OS
-Boot with the USB disk and press/hold ESC when the Republic of Gamers is displayed. Select your USB and then select Boot macOS Install from Install macOS High Sierra
-Open Disk Utility and format the MacOS Partition as Mac OS Journaled
-Start the installation of Mac OS in this partition
-The computer will restart a couple of times during the installation, every time it restarts you will need to go to the Boot menu, choose the USB and then select Boot macOS Install from your new MacOS partition (not from the USB Install Tool)
-
 STEP 5 - Run MacOS and install VGA drivers
-Once MacOS is installed you can restart the computer, open the USB and select Boot macOS from your new MacOS Partition.
+Once MacOS is installed you can restart the computer, boot via the USB and select Boot macOS from your new MacOS Partition. (DO NOT SELECT THE OS INSTALLATION AGAIN, SELECT TO BOOT MACOS FROM YOUR HD)
 Now it's time to install the Wi-Fi drivers from your Wi-Fi adapter (remember that the on-board Intel chipset isn't supported by MacOS so you need to use a compatible USB Wi-Fi adapter)
-After installing the wi-fi and restarting your Mac you need to install the Nvidia Web Drivers
-Search for NVIDIA Webdriver and your MacOS version, in my case it's 10.13.5 so for this one the file is already in the repository
-Download the driver and install it
-Also update your Mac OS - remember to just update to the latest version of your MacOS, but not to upgrade it to a new version (e.g. El Capitan to High Sierra or High Sierra to Mojave)
-If the NVIDIA Web Drivers installation gives an error saying that your OS is not compatible you will need to do a few tweaks to make it work:
+After installing the wi-fi and restarting your Mac you need to install the Nvidia Web Drivers, for that the easiest way is to use a handy patcher made by Benjamin Dobell (https://github.com/Benjamin-Dobell/nvidia-update)
+
+Just open terminal and type: bash <(curl -s https://raw.githubusercontent.com/Benjamin-Dobell/nvidia-update/master/nvidia-update.sh)
+
+This will find the best version, download and install it for you. Once installed, restart the computer
+
+Troubleshoot in case the NVIDIA Web Drivers installation gives an error saying that your OS is not compatible:
+You will need to do a few tweaks to make it work:
 1) Check what is the latest supported OS code for that Web Driver
 2) Open you SystemVersion.plist file inside CoreServices (FIND IT) and tweak your OS Code to match the NVIDIA one (make a backup first)
 3) Install the Web Driver and don't restart
