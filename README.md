@@ -139,3 +139,6 @@ There's no native support for changing the Brightness options so go to the AppSt
 
 STEP 10 - Re-map CMD keys - optional
 I personally recommend installing the software Karabiner to map the keys on your keyboard to be closer to what you use on Windows so I've mapped ALT to be the Command Key from Mac, for that I've added the config left_alt to left_gui and left_gui to left_alt.
+
+STEP 11 - Extra mouse buttons - optional
+If you are using a mouse with additional buttons and want to replicate the Back function from Windows you can do that installing this app: https://sensible-side-buttons.archagon.net
